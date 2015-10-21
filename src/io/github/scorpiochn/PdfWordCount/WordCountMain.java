@@ -10,6 +10,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 public class WordCountMain {
     public static void main(String[] args) throws Exception {
         Job job = Job.getInstance();
+        job.getConfiguration().set("mapreduce.ifile.readahead", "false");
         job.setInputFormatClass(PdfInputFormat.class);
         job.setJarByClass(WordCountMain.class);
         job.setJobName("WordCount");
