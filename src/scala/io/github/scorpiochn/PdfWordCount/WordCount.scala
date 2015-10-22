@@ -32,8 +32,11 @@ object WordCount {
         val fileRDD = sc.newAPIHadoopFile(args(0), classOf[PdfInputFormat],
             classOf[LongWritable], classOf[Text])
         //fileRDD.map(x=>x.split(" ").map((_,1))).flatMap(x=>x).reduceByKey(_+_).saveAsTextFile(args(1))
-        val rawWords = fileRDD.flatMap({case (x,y) => y.toString.split(" ")})
-        val words = rawWords.filter { w => isWord(w) }.map { x => WordTrim(x) }
+        //val rawWords = fileRDD.flatMap({case (x,y) => y.toString.split(" ")})
+        val fileLine = fileRDD.map(x=>x._2.toString).reduce((x,y)=>x+y)
+        val rawWords = fileLine.split(" ")
+        val _words = rawWords.filter { w => isWord(w) }.map { x => WordTrim(x) }
+        val words =sc.parallelize(_words)
         words.map((_,1)).reduceByKey(_+_).map({case (x,y) => (y,x)}).sortByKey(false).map(x=>(x._2,x._1)).saveAsTextFile(args(1))
         sc.stop()
     }
