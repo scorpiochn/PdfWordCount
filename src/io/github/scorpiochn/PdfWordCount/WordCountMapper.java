@@ -2,14 +2,17 @@ package io.github.scorpiochn.PdfWordCount;
 
 import java.io.IOException;
 import java.util.regex.Matcher;  
-import java.util.regex.Pattern; 
+import java.util.regex.Pattern;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.tartarus.snowball.SnowballStemmer;
 import org.tartarus.snowball.ext.englishStemmer;
+
+import io.github.scorpiochn.utils.StarDict;
 
 
 public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable> {
@@ -18,7 +21,24 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
 	static Pattern patternL = Pattern.compile("^[^a-z]*");
 	static Pattern patternR = Pattern.compile("[^a-z]*$");
 	
+	String dictPath ; //stardict dictpath+dictname
+	StarDict dict; 
+	
 	SnowballStemmer stemmer = new englishStemmer();
+	
+	@Override
+	protected void setup(Context context) throws IOException, InterruptedException {
+		super.setup(context);
+		
+		Configuration conf = context.getConfiguration();
+		dictPath = conf.get("dict.path");
+		if(dictPath!=null) {
+			dict = new StarDict(dictPath);
+		}
+		else {
+			dict = null;
+		}
+	}
 	
 	private boolean isWord(String w) {
 		Matcher matcher = pattern.matcher(w);
@@ -54,9 +74,15 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
         		word = this.WordTrim(word);
         		stemmer.setCurrent(word);
         		stemmer.stem();
-        		context.write(new Text(stemmer.getCurrent()), new IntWritable(1));
+        		word = stemmer.getCurrent();
+        		if(dict!=null) {
+        			if(dict.wordExist(word))
+        				context.write(new Text(word), new IntWritable(1));
+        		}
+        		else {
+        			context.write(new Text(word), new IntWritable(1));
+        		}
         	}
         }
-    }
-    
+    }    
 }

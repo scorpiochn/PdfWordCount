@@ -48,7 +48,7 @@ WordCount for PDF files
 
    * Hadoop
     
-    hadoop jar __$JAVAWCJAR__  io.github.scorpiochn.PdfWordCount.WordCountMain _INPUTPATH_  _OUTPUTPATH_
+    hadoop jar __$JAVAWCJAR__  io.github.scorpiochn.PdfWordCount.WordCountMain -Ddict.path=_DICTPATH_ _INPUTPATH_  _OUTPUTPATH_
 
    * Spark 
    
