@@ -6,6 +6,7 @@ import org.apache.spark.SparkContext
 import org.apache.hadoop.io.IntWritable
 import org.apache.hadoop.io.LongWritable
 import org.apache.hadoop.io.Text
+import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat
 
 object WordCount {
   
@@ -37,7 +38,8 @@ object WordCount {
         val rawWords = fileLine.split(" ")
         val _words = rawWords.filter { w => isWord(w) }.map { x => WordTrim(x) }
         val words =sc.parallelize(_words)
-        words.map((_,1)).reduceByKey(_+_).map({case (x,y) => (y,x)}).sortByKey(false).map(x=>(x._2,x._1)).saveAsTextFile(args(1))
+        val output = words.map((_,1)).reduceByKey(_+_).map({case (x,y) => (y,x)}).sortByKey(false).map(x=>(x._2,x._1))
+        output.saveAsNewAPIHadoopFile(args(1), classOf[IntWritable], classOf[Text], classOf[TextOutputFormat[IntWritable,Text]])
         sc.stop()
     }
 }
