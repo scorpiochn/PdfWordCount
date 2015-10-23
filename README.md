@@ -25,7 +25,11 @@ WordCount for PDF files
         │           │   ├── WordCountMapper.java
         │           │   └── WordCountReducer.java
         │           └── utils
-        │               └── Pdf2txt.java
+        │               ├── DictIndexFile.java
+        │               ├── DictZipFile.java
+        │               ├── Pdf2txt.java
+        │               ├── StarDict.java
+        │               └── WordStemmer.java
         └── scala
             └── io
                 └── github
