@@ -8,6 +8,8 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.tartarus.snowball.SnowballStemmer;
+import org.tartarus.snowball.ext.englishStemmer;
 
 
 public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable> {
@@ -15,6 +17,8 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
 	static Pattern pattern = Pattern.compile("[0-9]+");
 	static Pattern patternL = Pattern.compile("^[^a-z]*");
 	static Pattern patternR = Pattern.compile("[^a-z]*$");
+	
+	SnowballStemmer stemmer = new englishStemmer();
 	
 	private boolean isWord(String w) {
 		Matcher matcher = pattern.matcher(w);
@@ -48,7 +52,9 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
         	String word = w.toLowerCase();
         	if(this.isWord(word)) {
         		word = this.WordTrim(word);
-        		context.write(new Text(word), new IntWritable(1));
+        		stemmer.setCurrent(word);
+        		stemmer.stem();
+        		context.write(new Text(stemmer.getCurrent()), new IntWritable(1));
         	}
         }
     }

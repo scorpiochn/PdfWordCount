@@ -11,6 +11,7 @@ WordCount for PDF files
     │   ├── jempbox-1.8.10.jar
     │   ├── pdfbox-1.8.10.jar
     │   ├── preflight-1.8.10.jar
+    │   ├── stemmer.jar        
     │   └── xmpbox-1.8.10.jar
     ├── README.md
     └── src
@@ -33,6 +34,10 @@ WordCount for PDF files
                             └── WordCount.scala
 
 
+# Dependecies
+   * [PDFBox](http://pdfbox.apache.org/)
+   * [Snowball stemmer](http://snowball.tartarus.org/)
+   * [stardict](http://abloz.com/huzheng/stardict-dic/zh_CN/)
 
 
 # Run
