@@ -2,6 +2,7 @@
 package io.github.scorpiochn.utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -31,9 +32,19 @@ public class StarDict {
 	 */
 	public StarDict(String dictname) {
 		try {
-			this.dictname = dictname;
-			this.index = new DictIndexFile(dictname+".idx", "r");
-			this.dz = new DictZipFile(dictname+".dict.dz");
+			File dict = new File(dictname);
+			if(dict.isDirectory()) {
+				File ff[]=dict.listFiles();
+				for(File f:ff) {
+					String FileName = f.getName();
+					System.out.println(FileName);
+					if(FileName.indexOf('.')>=0) {
+						this.dictname = dictname+File.separator+FileName.split("\\.")[0];
+						this.index = new DictIndexFile(this.dictname+".idx", "r");
+						this.dz = new DictZipFile(this.dictname+".dict.dz");
+					}
+				}
+			}
 		}
 		catch(FileNotFoundException e) {
 			last_error = e.toString();
