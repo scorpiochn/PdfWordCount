@@ -1,5 +1,7 @@
 package io.github.scorpiochn.PdfWordCount;
 
+import java.net.URI;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -13,9 +15,16 @@ public class WordCountMain {
     public static void main(String[] args) throws Exception {
         Job job = Job.getInstance();
         Configuration conf = job.getConfiguration();
+        
         conf.set("mapreduce.ifile.readahead", "false");
         
         String Args[] = new GenericOptionsParser(conf, args).getRemainingArgs();
+        
+        String dictPath = conf.get("dict.path");
+        if(dictPath!=null) {
+        	URI dictUri = new URI(dictPath);
+        	job.addCacheArchive(dictUri);
+        }
         
         job.setInputFormatClass(PdfInputFormat.class);
         job.setJarByClass(WordCountMain.class);

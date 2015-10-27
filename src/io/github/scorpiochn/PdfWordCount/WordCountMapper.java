@@ -27,13 +27,14 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
 	SnowballStemmer stemmer = new englishStemmer();
 	
 	@Override
-	protected void setup(Context context) throws IOException, InterruptedException {
+	protected void setup(Context context) throws IOException, InterruptedException{
 		super.setup(context);
 		
 		Configuration conf = context.getConfiguration();
-		dictPath = conf.get("dict.path");
+		dictPath = conf.get("dict.name");
 		if(dictPath!=null) {
 			dict = new StarDict(dictPath);
+			
 		}
 		else {
 			dict = null;
@@ -76,6 +77,7 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
         		stemmer.stem();
         		word = stemmer.getCurrent();
         		if(dict!=null) {
+        			System.out.println(dict.getExplanation(word));
         			if(dict.wordExist(word))
         				context.write(new Text(word), new IntWritable(1));
         		}
