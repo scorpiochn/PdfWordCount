@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.jobcontrol.JobControl;
@@ -44,6 +45,13 @@ public class WordCountSortMain {
         FileOutputFormat.setOutputPath(job_sort, new Path(Args[2]));
         job_sort.setMapperClass(WordFreqSortMapper.class);
         job_sort.setReducerClass(WordFreqSortReducer.class);
+        
+        job_sort.setPartitionerClass(GroupPartitioner.class);
+        job_sort.setSortComparatorClass(KeyComparator.class);
+        job_sort.setGroupingComparatorClass(GroupComparator.class);
+        
+        job_sort.setMapOutputKeyClass(WordFreqWritable.class);
+        job_sort.setMapOutputValueClass(NullWritable.class);
         job_sort.setOutputKeyClass(IntWritable.class);
         job_sort.setOutputValueClass(Text.class);
         job_sort.setNumReduceTasks(1);
