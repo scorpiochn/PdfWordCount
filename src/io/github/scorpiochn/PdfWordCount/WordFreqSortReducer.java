@@ -25,8 +25,12 @@ public class WordFreqSortReducer extends Reducer<WordFreqWritable, NullWritable,
 		    throws IOException, InterruptedException {
 		for (@SuppressWarnings("unused") NullWritable w : values) {
 			/*context.write(key.getFreq(), key.getWord());*/
-			multipleOutputs.write(key.getWord().toString().substring(0, 1),key.getFreq(), key.getWord());
-			
+			//multipleOutputs.write(key.getWord().toString().substring(0, 1),key.getFreq(), key.getWord());
+			String name = "-";
+			if(key.getWord().toString().length()>0) {
+				name = key.getWord().toString().substring(0, 1); 
+			}
+			multipleOutputs.write(key.getFreq(), key.getWord(), name);
 		}
 	}
 	
