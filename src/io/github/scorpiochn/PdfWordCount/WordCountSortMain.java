@@ -20,6 +20,7 @@ public class WordCountSortMain {
     	
     	JobConf conf=new JobConf(WordCountSortMain.class);
     	conf.set("mapreduce.ifile.readahead", "false");
+    	conf.set("mapreduce.output.textoutputformat.separator", ":");
     	String Args[] = new GenericOptionsParser(conf, args).getRemainingArgs();
     	
         Job job_wc = Job.getInstance(conf);
