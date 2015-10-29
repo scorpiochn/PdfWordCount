@@ -13,6 +13,13 @@ public class WordFreqWritable  implements WritableComparable<WordFreqWritable>{
 	private String word;
 	private int freq;
 	
+	/*Writable MUST has a default constructor*/
+	public WordFreqWritable()
+	{
+		word = "";
+		freq = 0;
+	}
+	
 	public WordFreqWritable(String w, int f)
 	{
 		word = w;
@@ -43,10 +50,10 @@ public class WordFreqWritable  implements WritableComparable<WordFreqWritable>{
 	@Override
 	public int compareTo(WordFreqWritable o) {
 		if(freq < o.freq) {
-			return -1;
+			return 1;
 		}
 		else if(freq > o.freq) {
-			return 1;
+			return -1;
 		}
 		else {
 			return word.compareTo(o.word);
