@@ -8,6 +8,7 @@ import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.jobcontrol.JobControl;
+import org.apache.hadoop.mapreduce.Counters;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
@@ -71,17 +72,30 @@ public class WordCountSortMain {
         
         Thread jcThread = new Thread(jobCtrl);
         jcThread.start();  
+        int status = 0;
         while(true) {  
         	if(jobCtrl.allFinished()){  
         		System.out.println(jobCtrl.getSuccessfulJobList());  
                 jobCtrl.stop();  
-                System.exit(0);
+                status = 0;
+                break;
             } 
             if(jobCtrl.getFailedJobList().size() > 0){  
                 System.out.println(jobCtrl.getFailedJobList());  
                 jobCtrl.stop();  
-                System.exit(-1);
+                status = -1;
+                break;
             }  
         }
+        
+        Counters counter = job_sort.getCounters();
+        System.out.println("All Tokens: "+counter.findCounter("WordCountMain.WordStats", "TOKENS").getValue());
+        System.out.println("     Words: "+counter.findCounter("WordCountMain.WordStats", "WORDS").getValue());
+
+        System.out.println("All Tokens: "+counter.findCounter(WordCountMain.WordStats.TOKENS).getValue());
+        System.out.println("     Words: "+counter.findCounter(WordCountMain.WordStats.WORDS).getValue());
+
+        
+        System.exit(status);
     }
 }

@@ -12,6 +12,13 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 
 public class WordCountMain {
+	
+	enum WordStats {
+		TOKENS,
+		WORDS
+	}
+	
+	
     public static void main(String[] args) throws Exception {
         Job job = Job.getInstance();
         Configuration conf = job.getConfiguration();

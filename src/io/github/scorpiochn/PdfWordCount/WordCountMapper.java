@@ -70,6 +70,7 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
         String [] words = line.split(" ");
         for (String w:words) 
         {
+        	context.getCounter(WordCountMain.WordStats.TOKENS).increment(1);
         	String word = w.toLowerCase();
         	if(this.isWord(word)) {
         		word = this.WordTrim(word);
@@ -78,10 +79,13 @@ public class WordCountMapper extends Mapper<LongWritable,Text, Text, IntWritable
         		word = stemmer.getCurrent();
         		if(dict!=null) {
         			System.out.println(dict.getExplanation(word));
-        			if(dict.wordExist(word))
+        			if(dict.wordExist(word)) {
+        				context.getCounter(WordCountMain.WordStats.WORDS).increment(1);
         				context.write(new Text(word), new IntWritable(1));
+        			}
         		}
         		else {
+        			context.getCounter(WordCountMain.WordStats.WORDS).increment(1);
         			context.write(new Text(word), new IntWritable(1));
         		}
         	}
