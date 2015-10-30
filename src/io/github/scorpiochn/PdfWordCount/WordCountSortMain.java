@@ -88,7 +88,7 @@ public class WordCountSortMain {
             }  
         }
         
-        Counters counter = job_sort.getCounters();
+        Counters counter = job_wc.getCounters();
         System.out.println("All Tokens: "+counter.findCounter("WordCountMain.WordStats", "TOKENS").getValue());
         System.out.println("     Words: "+counter.findCounter("WordCountMain.WordStats", "WORDS").getValue());
 
