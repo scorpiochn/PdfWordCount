@@ -1,4 +1,3 @@
-﻿
 package io.github.scorpiochn.utils;
 
 import java.io.ByteArrayOutputStream;
